@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TaskList;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class TaskListController extends Controller
 {
@@ -18,19 +19,26 @@ class TaskListController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'title' => 'required|string|max:255'
+            ]);
+
+            $tasklist = TaskList::create([
+                'title' => $request->title
+            ]);
+
+            return response()->json($tasklist, 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message: ' => 'Erro ao criar lista de tarefas.',
+                'erro: ' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
