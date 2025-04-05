@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\TaskList;
-use App\Repositories\Interfaces\BaseRepositoryInterface;
 use App\Repositories\TaskListRepository;
 
 class TaskListService
@@ -15,7 +14,7 @@ class TaskListService
         $this->taskListRepository = $taskListRepository;
     }
 
-    public function create(array $data): TaskList
+    public function create(array $data)
     {
         return $this->taskListRepository->create($data);
     }
@@ -30,7 +29,7 @@ class TaskListService
         return $this->taskListRepository->all();
     }
 
-    public function update(int $id, array $data): TaskList
+    public function update(int $id, array $data)
     {
         return $this->taskListRepository->update($id, $data);
     }
