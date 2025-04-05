@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\TaskList;
 use App\Services\TaskListService;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -60,9 +61,22 @@ class TaskListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TaskList $taskList)
+    public function show($id)
     {
-        //
+        try {
+            $taskList = $this->taskListService->findOrFail($id);
+            return response()->json($taskList, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Lista de tarefas não encontrada.',
+                'error' => $e->getMessage()
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao listar lista de tarefas.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
