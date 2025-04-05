@@ -20,7 +20,7 @@ class TaskListService
         return $this->taskListRepository->create($data);
     }
 
-    public function findOrFail(int $id): TaskList
+    public function findOrFail(int $id)
     {
         return $this->taskListRepository->findOrFail($id);
     }
@@ -28,5 +28,10 @@ class TaskListService
     public function getAll(): ?array
     {
         return $this->taskListRepository->all();
+    }
+
+    public function update(int $id, array $data): TaskList
+    {
+        return $this->taskListRepository->update($id, $data);
     }
 }

@@ -79,20 +79,30 @@ class TaskListController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(TaskList $taskList)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TaskList $taskList)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'title' => 'required|string|max:255'
+            ]);
+
+            $taksList = $this->taskListService->update($id, $request->all());
+            return response()->json($taksList, 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message: ' => 'Erro ao criar lista de tarefas.',
+                'error: ' => $e->getMessage()
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Lista de tarefas não encontrada.',
+                'error' => $e->getMessage()
+            ], 404);
+        }
     }
 
     /**
