@@ -25,7 +25,7 @@ class TaskListController extends Controller
     {
         try {
 
-            $tasklists = $this->taskListService->getAll();
+            $tasklists = $this->taskListService->all();
             return response()->json($tasklists, 200);
 
         } catch (Exception $e) {

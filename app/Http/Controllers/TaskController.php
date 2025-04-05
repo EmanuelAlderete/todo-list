@@ -23,6 +23,15 @@ class TaskController extends Controller
         try {
             $tasks = $this->taskService->all();
 
+            return response()->json([
+                'status' => 'success',
+                'data' => $tasks,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 
