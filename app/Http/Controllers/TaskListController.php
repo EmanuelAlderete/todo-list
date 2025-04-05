@@ -3,19 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\TaskList;
+use App\Services\TaskListService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class TaskListController extends Controller
 {
+    protected TaskListService $taskListService;
+
+    public function __construct(TaskListService $taskListService)
+    {
+        $this->taskListService = $taskListService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $tasks = TaskList::all();
+        try {
 
-        return response()->json($tasks, 200);
+            $tasklists = $this->taskListService->getAll();
+            return response()->json($tasklists, 200);
+
+        } catch (Exception $e) {
+
+            return response()->json([
+                'message' => 'Erro ao listar listas de tarefas.',
+                'error' => $e->getMessage()
+
+            ], 500);
+        }
     }
 
     /**
@@ -28,15 +47,12 @@ class TaskListController extends Controller
                 'title' => 'required|string|max:255'
             ]);
 
-            $tasklist = TaskList::create([
-                'title' => $request->title
-            ]);
-
-            return response()->json($tasklist, 200);
+            $taksList = $this->taskListService->create($request->all());
+            return response()->json($taksList, 201);
         } catch (ValidationException $e) {
             return response()->json([
                 'message: ' => 'Erro ao criar lista de tarefas.',
-                'erro: ' => $e->getMessage()
+                'error: ' => $e->getMessage()
             ]);
         }
     }
@@ -70,6 +86,17 @@ class TaskListController extends Controller
      */
     public function destroy(TaskList $taskList)
     {
-        //
+        try {
+            $taskList = $this->taskListService->findOrFail($taskList->id);
+            $taskList->delete();
+            return response()->json([
+                'message' => 'Lista de tarefas deletada com sucesso.'
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao deletar lista de tarefas.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

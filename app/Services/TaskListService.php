@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use App\Repositories\Interfaces\TaskListRepositoryInterface;
 use App\Models\TaskList;
-use Illuminate\Database\Eloquent\Collection;
+use App\Repositories\Interfaces\BaseRepositoryInterface;
+use App\Repositories\TaskListRepository;
 
 class TaskListService
 {
-    protected TaskListRepositoryInterface $taskListRepository;
+    protected TaskListRepository $taskListRepository;
 
-    public function __construct(TaskListRepositoryInterface $taskListRepository)
+    public function __construct(TaskListRepository $taskListRepository)
     {
         $this->taskListRepository = $taskListRepository;
     }
@@ -20,13 +20,13 @@ class TaskListService
         return $this->taskListRepository->create($data);
     }
 
-    public function findById(int $id): TaskList
+    public function findOrFail(int $id): TaskList
     {
-        return $this->taskListRepository->findById($id);
+        return $this->taskListRepository->findOrFail($id);
     }
 
     public function getAll(): ?array
     {
-        return $this->taskListRepository->getAll();
+        return $this->taskListRepository->all();
     }
 }
