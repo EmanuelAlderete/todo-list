@@ -4,9 +4,9 @@ namespace App\Repositories;
 
 use App\Models\TaskList;
 use App\Repositories\BaseRepository;
-use App\Repositories\Interfaces\BaseRepositoryInterface;
+use App\Repositories\Interfaces\TaskRepositoryInterface;
 
-class TaskListRepository extends BaseRepository implements BaseRepositoryInterface
+class TaskListRepository extends BaseRepository implements TaskRepositoryInterface
 {
     public function __construct(TaskList $model)
     {
