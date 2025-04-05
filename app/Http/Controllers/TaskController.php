@@ -20,7 +20,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $tasks = $this->taskService->all();
+
+        }
     }
 
     /**

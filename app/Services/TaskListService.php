@@ -24,7 +24,7 @@ class TaskListService
         return $this->taskListRepository->findOrFail($id);
     }
 
-    public function getAll(): ?array
+    public function all(): ?array
     {
         return $this->taskListRepository->all();
     }
