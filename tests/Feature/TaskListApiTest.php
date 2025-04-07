@@ -41,8 +41,6 @@ class TaskListApiTest extends TestCase
             'some_data' => 'Some value',
         ]);
 
-        $response->assertJsonValidationErrors(['title']);
-
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['title']);
     }
