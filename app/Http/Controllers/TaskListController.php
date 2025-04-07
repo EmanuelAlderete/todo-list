@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\TaskList;
 use App\Services\TaskListService;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class TaskListController extends Controller
 {
+    use AuthorizesRequests;
     protected TaskListService $taskListService;
 
     public function __construct(TaskListService $taskListService)
@@ -23,9 +24,8 @@ class TaskListController extends Controller
      */
     public function index()
     {
-        $tasklists = $this->taskListService->all();
+        $tasklists = TaskList::where('user_id', Auth::user()->id)->get();
         return response()->json($tasklists, 200);
-
     }
 
     /**
@@ -34,8 +34,11 @@ class TaskListController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255'
+            'title' => 'required|string|max:255',
+
         ]);
+
+        $request['user_id'] = Auth::user()->id;
 
         $taksList = $this->taskListService->create($request->all());
         return response()->json($taksList, 201);

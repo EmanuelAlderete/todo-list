@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use App\Services\TaskService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class TaskController extends Controller
 {
+    use AuthorizesRequests;
     protected TaskService $taskService;
 
     public function __construct(TaskService $taskService)
@@ -57,7 +60,8 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        $this->taskService->findOrFail($task->id);
+        $this->authorize('view', $task);
+
         return response()->json([
             'status' => 'success',
             'data' => $task,
