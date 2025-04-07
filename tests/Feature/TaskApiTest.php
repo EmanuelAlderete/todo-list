@@ -257,4 +257,23 @@ class TaskApiTest extends TestCase
                 ],
             ]);
     }
+
+    public function test_user_cannot_access_other_users_tasks(): void
+    {
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+
+        $taskList = \App\Models\TaskList::factory()->create([
+            'user_id' => $userA->id,
+        ]);
+
+        $task = \App\Models\Task::factory(10)->create([
+            'task_list_id' => $taskList->id,
+        ]);
+
+        $this->actingAs($userB, 'sanctum');
+
+        $response = $this->getJson('/api/task/' . $task[0]->id)
+            ->assertStatus(403);
+    }
 }
