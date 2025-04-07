@@ -36,9 +36,11 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'text' => 'required|string|max:1000',
-            'labels' => 'nullable|array',
-            'task_list_id' => 'required|exists:task_lists,id'
+            'task_list_id' => 'required|exists:task_lists,id',
+            'text' => 'required|string',
+            'labels' => 'array',
+            'status' => 'string',
+            'priority' => 'boolean',
         ]);
 
         $task = $this->taskService->create($request->all());
