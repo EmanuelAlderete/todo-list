@@ -24,11 +24,12 @@ class TaskListApiTest extends TestCase
         $response = $this->postJson('/api/task-list', [
             'title' => 'My Task List',
         ]);
+
         $response->assertStatus(201)
             ->assertJsonFragment([
                 'title' => 'My Task List',
             ]);
-        ;
+
         $this->assertDatabaseHas('task_lists', ['title' => 'My Task List']);
     }
 
@@ -39,6 +40,9 @@ class TaskListApiTest extends TestCase
         $response = $this->postJson('/api/task-list', [
             'some_data' => 'Some value',
         ]);
+
+        $response->assertJsonValidationErrors(['title']);
+
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['title']);
     }
