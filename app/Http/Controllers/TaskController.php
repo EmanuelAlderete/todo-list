@@ -57,15 +57,32 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        $this->taskService->findOrFail($task->id);
+        return response()->json([
+            'status' => 'success',
+            'data' => $task,
+        ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'task_list_id' => 'exists:task_lists,id',
+            'text' => 'string',
+            'labels' => 'array',
+            'status' => 'string',
+            'priority' => 'boolean',
+        ]);
+
+        $task = $this->taskService->update($id, $request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $task,
+        ], 200);
     }
 
     /**
@@ -73,6 +90,12 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task = $this->taskService->findOrFail($task->id);
+        $this->taskService->delete($task->id);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Task deleted successfully',
+        ], 200);
     }
 }

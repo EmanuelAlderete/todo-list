@@ -33,4 +33,9 @@ class TaskService
     {
         return $this->taskRepository->update($id, $data);
     }
+
+    public function delete(int $id)
+    {
+        return $this->taskRepository->delete($id);
+    }
 }
