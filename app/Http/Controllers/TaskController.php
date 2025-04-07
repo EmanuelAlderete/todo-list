@@ -20,19 +20,14 @@ class TaskController extends Controller
      */
     public function index()
     {
-        try {
-            $tasks = $this->taskService->all();
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $tasks,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+        $tasks = $this->taskService->all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $tasks,
+        ], 200);
+
     }
 
     /**
@@ -40,31 +35,19 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        try {
+        $request->validate([
+            'text' => 'required|string|max:1000',
+            'labels' => 'nullable|array',
+            'task_list_id' => 'required|exists:task_lists,id'
+        ]);
 
-            $request->validate([
-                'text' => 'required|string|max:1000',
-                'labels' => 'nullable|array',
-                'task_list_id' => 'required|exists:task_lists,id'
-            ]);
+        $task = $this->taskService->create($request->all());
 
-            $task = $this->taskService->create($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $task,
+        ], 201);
 
-            return response()->json([
-                'status' => 'success',
-                'data' => $task,
-            ], 201);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->validator->errors(),
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
     }
 
     /**
