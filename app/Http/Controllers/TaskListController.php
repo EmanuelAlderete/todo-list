@@ -23,19 +23,9 @@ class TaskListController extends Controller
      */
     public function index()
     {
-        try {
+        $tasklists = $this->taskListService->all();
+        return response()->json($tasklists, 200);
 
-            $tasklists = $this->taskListService->all();
-            return response()->json($tasklists, 200);
-
-        } catch (Exception $e) {
-
-            return response()->json([
-                'message' => 'Erro ao listar listas de tarefas.',
-                'error' => $e->getMessage()
-
-            ], 500);
-        }
     }
 
     /**
@@ -43,19 +33,12 @@ class TaskListController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'title' => 'required|string|max:255'
-            ]);
+        $request->validate([
+            'title' => 'required|string|max:255'
+        ]);
 
-            $taksList = $this->taskListService->create($request->all());
-            return response()->json($taksList, 201);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'message: ' => 'Erro ao criar lista de tarefas.',
-                'error: ' => $e->getMessage()
-            ]);
-        }
+        $taksList = $this->taskListService->create($request->all());
+        return response()->json($taksList, 201);
     }
 
     /**
@@ -63,20 +46,8 @@ class TaskListController extends Controller
      */
     public function show($id)
     {
-        try {
-            $taskList = $this->taskListService->findOrFail($id);
-            return response()->json($taskList, 200);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'message' => 'Lista de tarefas não encontrada.',
-                'error' => $e->getMessage()
-            ], 404);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao listar lista de tarefas.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $taskList = $this->taskListService->findOrFail($id);
+        return response()->json($taskList, 200);
     }
 
 
@@ -85,24 +56,12 @@ class TaskListController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $request->validate([
-                'title' => 'required|string|max:255'
-            ]);
+        $request->validate([
+            'title' => 'required|string|max:255'
+        ]);
 
-            $taksList = $this->taskListService->update($id, $request->all());
-            return response()->json($taksList, 201);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'message: ' => 'Erro ao criar lista de tarefas.',
-                'error: ' => $e->getMessage()
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'message' => 'Lista de tarefas não encontrada.',
-                'error' => $e->getMessage()
-            ], 404);
-        }
+        $taksList = $this->taskListService->update($id, $request->all());
+        return response()->json($taksList, 200);
     }
 
     /**
@@ -110,17 +69,10 @@ class TaskListController extends Controller
      */
     public function destroy(TaskList $taskList)
     {
-        try {
-            $taskList = $this->taskListService->findOrFail($taskList->id);
-            $taskList->delete();
-            return response()->json([
-                'message' => 'Lista de tarefas deletada com sucesso.'
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao deletar lista de tarefas.',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        $taskList = $this->taskListService->findOrFail($taskList->id);
+        $taskList->delete();
+        return response()->json([
+            'message' => 'Lista de tarefas deletada com sucesso.'
+        ], 200);
     }
 }
