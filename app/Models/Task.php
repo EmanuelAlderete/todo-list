@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
-    protected $fillable = ['task_list_id', 'text', 'labels', 'status'];
+    protected $fillable = ['task_list_id', 'text', 'labels', 'status', 'priority'];
 
     protected $casts = [
         'labels' => 'array',
