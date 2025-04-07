@@ -53,7 +53,7 @@ class TaskListApiTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_list_task_lists(): void
+    public function test_get_all_task_lists(): void
     {
         $this->authenticated();
 
